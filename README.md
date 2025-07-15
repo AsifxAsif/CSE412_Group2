@@ -24,8 +24,7 @@ A fully responsive file storage and management system built for the CSE412 cours
 - ✅ **Automatic file categorization** by type into subdirectories (`uploads/txt/`, `uploads/img/`, `uploads/audio/`, etc.)  
 - ✅ **Scroll through the list of uploaded files**  
 - ✅ **Responsive and modern dashboard design**  
-- ✅ **Live search functionality** to filter files by name  
-- ✅ **File size validation** for up to 5MB per file  
+- ✅ **Live search functionality** to filter files by name
 - ✅ **Modal Reset**: The file input gets reset when the modal is opened again after file rejection or modal closure.
 
 ---
