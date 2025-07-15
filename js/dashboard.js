@@ -1,11 +1,9 @@
 const modal = document.getElementById('uploadModal');
-const renameModal = document.getElementById('renameModal'); // For rename modal
+const renameModal = document.getElementById('renameModal');
 const fileInput = document.getElementById('file');
 const fileNameDisplay = document.getElementById('file-name');
 const fileList = document.getElementById('fileList');
 const search = document.getElementById('search');
-const viewFileModal = document.getElementById('viewFileModal'); // For view file modal
-const viewFileContent = document.getElementById('viewFileContent'); // To show file content
 
 // Open the upload modal
 function openModal() {
@@ -14,21 +12,15 @@ function openModal() {
 
 // Close the modal
 function closeModal() {
-    // Close the upload modal
     modal.classList.remove('active');
-    // Close the rename modal
     renameModal.classList.remove('active');
-
-    // Pause the video if it is playing
     const video = document.querySelector('video');
     if (video) {
-        video.pause(); // This will stop the video playback
+        video.pause();
     }
-
-    // Pause the audio if it is playing
     const audio = document.querySelector('audio');
     if (audio) {
-        audio.pause(); // This will stop the audio playback
+        audio.pause();
     }
 }
 
@@ -44,7 +36,7 @@ fileInput.addEventListener('change', () => {
 
 // Function to check if the file already exists in the file list
 function checkFileExists(fileName) {
-    const existingFiles = document.querySelectorAll('.file-item span'); // Get all existing file names
+    const existingFiles = document.querySelectorAll('.file-item span');
     return Array.from(existingFiles).some(existingFile => existingFile.textContent === fileName);
 }
 
@@ -69,19 +61,35 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     uploadFile(fileName);
 });
 
-// Helper function to upload the file
-async function uploadFile(fileName) {
+// Helper function to upload the files
+async function uploadFile() {
     const formData = new FormData();
-    formData.append('file', fileInput.files[0]); // Append the selected file
+
+    // Loop through all selected files and append them to the form data
+    for (let i = 0; i < fileInput.files.length; i++) {
+        formData.append('file[]', fileInput.files[i]);  // Use 'file[]' to handle multiple files in PHP
+    }
 
     try {
-        await fetch('php/upload.php', {
+        const response = await fetch('php/upload.php', {
             method: 'POST',
             body: formData
         });
+
+        // Check if the response is ok
+        if (!response.ok) {
+            console.error('Upload failed with status: ', response.status);
+            alert('File upload failed.');
+            return;
+        }
+
+        // Handle server response
+        const result = await response.text();
+        console.log('Upload result:', result); // Check what the server sends back
+
         loadFiles(); // Reload the file list after successful upload
     } catch (err) {
-        console.error('Upload failed:', err);
+        console.error('Upload failed:', err); // Log any error that occurred during the fetch request
         alert('File upload failed.');
     }
 
@@ -93,15 +101,9 @@ async function uploadFile(fileName) {
 // Load the files from the server
 function loadFiles() {
     fetch('php/list_files.php')
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
             fileList.innerHTML = '';
-
             if (!data || data.length === 0) {
                 const emptyMsg = document.createElement('div');
                 emptyMsg.className = 'file-item';
@@ -111,19 +113,15 @@ function loadFiles() {
                 fileList.appendChild(emptyMsg);
                 return;
             }
-
             const groupedFiles = groupFilesByDate(data);
-
             Object.keys(groupedFiles).forEach(category => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'file-category';
-                categoryDiv.innerHTML = `<h3>${category}</h3>`; // Display the formatted date as category
-
+                categoryDiv.innerHTML = `<h3>${category}</h3>`;
                 groupedFiles[category].forEach(file => {
                     const item = document.createElement('div');
                     item.className = 'file-item';
-                    const parts = file.filepath.split('/');
-                    const filename = parts[parts.length - 1];
+                    const filename = file.filepath.split('/').pop();
                     item.innerHTML = `
                         <span>${filename}</span>
                         <div class="file-actions">
@@ -135,7 +133,6 @@ function loadFiles() {
                     `;
                     categoryDiv.appendChild(item);
                 });
-
                 fileList.appendChild(categoryDiv);
             });
         })
@@ -148,25 +145,14 @@ function loadFiles() {
 // Group files by date
 function groupFilesByDate(files) {
     const groupedFiles = {};
-
     files.forEach(file => {
         const fileDate = new Date(file.upload_date);
-        const month = fileDate.toLocaleString('default', { month: 'long' }); // Get full month name
-        const day = fileDate.getDate(); // Get the day of the month
-        const year = fileDate.getFullYear(); // Get the year
-
-        // Format the date string
-        const formattedDate = `${month} ${day}, ${year}`;
-
-        // If the group doesn't exist yet, create it
+        const formattedDate = `${fileDate.toLocaleString('default', { month: 'long' })} ${fileDate.getDate()}, ${fileDate.getFullYear()}`;
         if (!groupedFiles[formattedDate]) {
             groupedFiles[formattedDate] = [];
         }
-
-        // Push the file into the group
         groupedFiles[formattedDate].push(file);
     });
-
     return groupedFiles;
 }
 
