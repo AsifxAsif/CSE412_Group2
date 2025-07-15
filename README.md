@@ -1,3 +1,4 @@
+
 # 📁 CSE412 Group 2 - File Storage Web Application
 
 A fully responsive file storage and management system built for the CSE412 course project. This application allows users to register, log in, upload text or image files, and view/manage them through a clean dashboard interface.
@@ -13,17 +14,19 @@ A fully responsive file storage and management system built for the CSE412 cours
 | Arpita Biswas Deepa    | 2021-3-60-055 |
 | Md. Mehedi Hasan Tazim | 2021-3-60-080 |
 
-
 ---
 
 ## 🔧 Features
 
-- ✅ User Registration and Login with validation  
-- ✅ File upload via modal (supports `.txt`, `.jpg`, `.png`, etc.)  
-- ✅ Auto-sort files by type into subdirectories (`uploads/txt/`, `uploads/img/`)  
-- ✅ Scrollable list of uploaded files  
-- ✅ Responsive and modern dashboard design  
-- ✅ Live search functionality to filter files  
+- ✅ **User Registration and Login with validation**  
+- ✅ **File upload via modal** (supports `.txt`, `.jpg`, `.png`, `.jpeg`, `.gif`, `.mp3`, `.mp4`, `.pdf`, etc.)
+- ✅ **Prevent uploading duplicate files**  
+- ✅ **Automatic file categorization** by type into subdirectories (`uploads/txt/`, `uploads/img/`, `uploads/audio/`, etc.)  
+- ✅ **Scroll through the list of uploaded files**  
+- ✅ **Responsive and modern dashboard design**  
+- ✅ **Live search functionality** to filter files by name  
+- ✅ **File size validation** for up to 5MB per file  
+- ✅ **Modal Reset**: The file input gets reset when the modal is opened again after file rejection or modal closure.
 
 ---
 
