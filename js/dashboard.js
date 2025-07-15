@@ -5,12 +5,12 @@ const fileNameDisplay = document.getElementById('file-name');
 const fileList = document.getElementById('fileList');
 const search = document.getElementById('search');
 
-// Open the upload modal
 function openModal() {
+    fileInput.value = '';
+    fileNameDisplay.textContent = '';
     modal.classList.add('active');
 }
 
-// Close the modal
 function closeModal() {
     modal.classList.remove('active');
     renameModal.classList.remove('active');
@@ -24,7 +24,6 @@ function closeModal() {
     }
 }
 
-// File input event for displaying selected files
 fileInput.addEventListener('change', () => {
     if (fileInput.files.length === 0) {
         fileNameDisplay.textContent = '';
@@ -34,13 +33,11 @@ fileInput.addEventListener('change', () => {
     fileNameDisplay.textContent = names;
 });
 
-// Function to check if the file already exists in the file list
 function checkFileExists(fileName) {
     const existingFiles = document.querySelectorAll('.file-item span');
     return Array.from(existingFiles).some(existingFile => existingFile.textContent === fileName);
 }
 
-// File upload form submission
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -51,23 +48,19 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
 
     const fileName = fileInput.files[0].name;
 
-    // Check if the file already exists in the file list
     if (checkFileExists(fileName)) {
         alert(`A file named "${fileName}" already exists. Upload cancelled.`);
-        return; // Stop the upload if the file exists
+        openModal();
+        return;
     }
-
-    // Proceed with upload if the file does not exist
-    uploadFile(fileName);
+    uploadFile();
 });
 
-// Helper function to upload the files
 async function uploadFile() {
     const formData = new FormData();
 
-    // Loop through all selected files and append them to the form data
     for (let i = 0; i < fileInput.files.length; i++) {
-        formData.append('file[]', fileInput.files[i]);  // Use 'file[]' to handle multiple files in PHP
+        formData.append('file[]', fileInput.files[i]);
     }
 
     try {
@@ -76,20 +69,18 @@ async function uploadFile() {
             body: formData
         });
 
-        // Check if the response is ok
         if (!response.ok) {
             console.error('Upload failed with status: ', response.status);
             alert('File upload failed.');
             return;
         }
 
-        // Handle server response
         const result = await response.text();
-        console.log('Upload result:', result); // Check what the server sends back
+        console.log('Upload result:', result);
 
-        loadFiles(); // Reload the file list after successful upload
+        loadFiles();
     } catch (err) {
-        console.error('Upload failed:', err); // Log any error that occurred during the fetch request
+        console.error('Upload failed:', err);
         alert('File upload failed.');
     }
 
@@ -98,7 +89,6 @@ async function uploadFile() {
     closeModal();
 }
 
-// Load the files from the server
 function loadFiles() {
     fetch('php/list_files.php')
         .then(res => res.json())
@@ -142,7 +132,6 @@ function loadFiles() {
         });
 }
 
-// Group files by date
 function groupFilesByDate(files) {
     const groupedFiles = {};
     files.forEach(file => {
@@ -156,56 +145,49 @@ function groupFilesByDate(files) {
     return groupedFiles;
 }
 
-// Search files by name (exclude date categories)
 search.addEventListener('input', () => {
     const term = search.value.toLowerCase();
     const fileItems = document.querySelectorAll('.file-item');
-    const categories = document.querySelectorAll('.file-category'); // To target categories like dates
+    const categories = document.querySelectorAll('.file-category');
 
-    // Loop through all file items
     fileItems.forEach(item => {
-        const fileName = item.querySelector('span').textContent.toLowerCase(); // Get the file name
+        const fileName = item.querySelector('span').textContent.toLowerCase();
         if (fileName.includes(term)) {
-            item.style.display = ''; // Show the file item if it matches the search term
+            item.style.display = '';
         } else {
-            item.style.display = 'none'; // Hide the file item if it doesn't match
+            item.style.display = 'none';
         }
     });
 
-    // Loop through all file categories (like dates) and hide those categories that contain only hidden files
     categories.forEach(category => {
         const visibleFiles = category.querySelectorAll('.file-item:not([style*="display: none"])');
         if (visibleFiles.length > 0) {
-            category.style.display = ''; // Show the category if it has visible files
+            category.style.display = '';
         } else {
-            category.style.display = 'none'; // Hide the category if it has no visible files
+            category.style.display = 'none';
         }
     });
 });
 
-// File view and download functions
 function viewFile(fileId) {
     fetch(`php/get_files.php?id=${fileId}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                const fileExtension = data.filename.split('.').pop().toLowerCase(); // Get file extension
+                const fileExtension = data.filename.split('.').pop().toLowerCase();
                 let content = '';
 
-                // Stop any previously playing video
                 const previousVideo = document.querySelector('video');
                 if (previousVideo) {
-                    previousVideo.pause(); // Stop the previous video
-                    previousVideo.currentTime = 0; // Reset video playback to start
+                    previousVideo.pause();
+                    previousVideo.currentTime = 0;
                 }
 
-                // Stop any previously playing audio
                 const previousAudio = document.querySelector('audio');
                 if (previousAudio) {
-                    previousAudio.pause(); // Stop the previous audio
+                    previousAudio.pause();
                 }
 
-                // Display file content based on file type
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
                     content = `<img src="${data.filepath}" alt="File Image" style="max-width: 100%; max-height: 500px;">`;
                 } else if (['mp4', 'avi', 'mov'].includes(fileExtension)) {
@@ -222,7 +204,7 @@ function viewFile(fileId) {
                     fetch(data.filepath)
                         .then(response => response.text())
                         .then(textContent => {
-                            content = `<pre>${textContent}</pre>`; // Display code or text in pre-formatted text
+                            content = `<pre>${textContent}</pre>`;
                             viewFileContent.innerHTML = content;
                         })
                         .catch(err => {
@@ -238,15 +220,13 @@ function viewFile(fileId) {
                     content = `<p>Unable to preview this file type.</p>`;
                 }
 
-                // Insert content into modal
                 const viewFileContent = document.getElementById('viewFileContent');
                 viewFileContent.innerHTML = content;
 
-                // Show the modal
-                openViewFileModal(); 
+                openViewFileModal();
             } else {
                 alert('Error opening the file');
-                console.error('Error:', data.error); // Log any error received
+                console.error('Error:', data.error);
             }
         })
         .catch(err => {
@@ -255,28 +235,25 @@ function viewFile(fileId) {
         });
 }
 
-// Open the modal to view the file
 function openViewFileModal() {
     const modal = document.getElementById('viewFileModal');
     modal.classList.add('active');
 }
 
-// Close the file view modal
 function closeViewFileModal() {
     const modal = document.getElementById('viewFileModal');
     modal.classList.remove('active');
 }
 
-// Rename file function
 function renameFile(fileId) {
     fetch(`php/get_files.php?id=${fileId}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 const newNameInput = document.getElementById('newFileName');
-                newNameInput.value = data.filename;  // Set current filename in the input field
+                newNameInput.value = data.filename;
 
-                openRenameModal();  // Show the rename modal
+                openRenameModal();
 
                 const renameForm = document.getElementById('renameForm');
                 renameForm.onsubmit = function (e) {
@@ -288,8 +265,8 @@ function renameFile(fileId) {
                             .then(result => {
                                 if (result.success) {
                                     alert('File renamed successfully');
-                                    loadFiles(); // Reload files after renaming
-                                    closeRenameModal(); // Close the rename modal after success
+                                    loadFiles();
+                                    closeRenameModal();
                                 } else {
                                     alert('Error renaming the file');
                                 }
@@ -306,17 +283,14 @@ function renameFile(fileId) {
         });
 }
 
-// Close the rename modal
 function closeRenameModal() {
-    renameModal.classList.remove('active'); // Close the rename modal
+    renameModal.classList.remove('active');
 }
 
-// Open the rename modal
 function openRenameModal() {
     renameModal.classList.add('active');
 }
 
-// Delete file function
 function deleteFile(fileId) {
     if (confirm('Are you sure you want to delete this file?')) {
         fetch(`php/delete_file.php?id=${fileId}`, { method: 'DELETE' })
@@ -332,10 +306,9 @@ function deleteFile(fileId) {
     }
 }
 
-// Download file function
 function downloadFile(fileId) {
     window.location.href = `php/download_file.php?id=${fileId}`;
 }
 
-// Initialize files on page load
 window.onload = loadFiles;
+
