@@ -11,9 +11,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 try {
-    $stmt = $conn->prepare("SELECT filepath FROM uploaded_files WHERE user_id = ?");
+    $stmt = $conn->prepare("SELECT id, filepath, upload_date FROM uploaded_files WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $files = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header('Content-Type: application/json');
     echo json_encode($files);
