@@ -42,6 +42,12 @@ fileInput.addEventListener('change', () => {
     fileNameDisplay.textContent = names;
 });
 
+// Function to check if the file already exists in the file list
+function checkFileExists(fileName) {
+    const existingFiles = document.querySelectorAll('.file-item span'); // Get all existing file names
+    return Array.from(existingFiles).some(existingFile => existingFile.textContent === fileName);
+}
+
 // File upload form submission
 document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -51,17 +57,29 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         return;
     }
 
-    const formData = new FormData();
-    for (let i = 0; i < fileInput.files.length; i++) {
-        formData.append('file[]', fileInput.files[i]);
+    const fileName = fileInput.files[0].name;
+
+    // Check if the file already exists in the file list
+    if (checkFileExists(fileName)) {
+        alert(`A file named "${fileName}" already exists. Upload cancelled.`);
+        return; // Stop the upload if the file exists
     }
+
+    // Proceed with upload if the file does not exist
+    uploadFile(fileName);
+});
+
+// Helper function to upload the file
+async function uploadFile(fileName) {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]); // Append the selected file
 
     try {
         await fetch('php/upload.php', {
             method: 'POST',
             body: formData
         });
-        loadFiles();
+        loadFiles(); // Reload the file list after successful upload
     } catch (err) {
         console.error('Upload failed:', err);
         alert('File upload failed.');
@@ -70,7 +88,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     fileInput.value = '';
     fileNameDisplay.textContent = '';
     closeModal();
-});
+}
 
 // Load the files from the server
 function loadFiles() {
@@ -179,12 +197,12 @@ search.addEventListener('input', () => {
     });
 });
 
+// File view and download functions
 function viewFile(fileId) {
     fetch(`php/get_files.php?id=${fileId}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                console.log('File data:', data); // Log file data for debugging
                 const fileExtension = data.filename.split('.').pop().toLowerCase(); // Get file extension
                 let content = '';
 
