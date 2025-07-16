@@ -89,12 +89,18 @@ async function uploadFile() {
     closeModal();
 }
 
-function loadFiles() {
-    fetch('php/list_files.php')
-        .then(res => res.json())
-        .then(data => {
-            fileList.innerHTML = '';
-            if (!data || data.length === 0) {
+// Load the files from the server
+async function loadFiles() {
+    try {
+        const res = await fetch('php/list_files.php');
+        const data = await res.text();  // Get response as text first
+        console.log('Raw response: ', data); // Log the raw response to see what it is
+
+        try {
+            const files = JSON.parse(data); // Try parsing it as JSON
+            fileList.innerHTML = ''; // Clear current list
+
+            if (!files || files.length === 0) {
                 const emptyMsg = document.createElement('div');
                 emptyMsg.className = 'file-item';
                 emptyMsg.style.textAlign = 'center';
@@ -103,15 +109,20 @@ function loadFiles() {
                 fileList.appendChild(emptyMsg);
                 return;
             }
-            const groupedFiles = groupFilesByDate(data);
+
+            // Group the files by date
+            const groupedFiles = groupFilesByDate(files);
+
             Object.keys(groupedFiles).forEach(category => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'file-category';
-                categoryDiv.innerHTML = `<h3>${category}</h3>`;
+                categoryDiv.innerHTML = `<h3>${category}</h3>`; // Display the formatted date as category
+
                 groupedFiles[category].forEach(file => {
                     const item = document.createElement('div');
                     item.className = 'file-item';
-                    const filename = file.filepath.split('/').pop();
+                    const parts = file.filepath.split('/');
+                    const filename = parts[parts.length - 1];
                     item.innerHTML = `
                         <span>${filename}</span>
                         <div class="file-actions">
@@ -123,13 +134,18 @@ function loadFiles() {
                     `;
                     categoryDiv.appendChild(item);
                 });
+
                 fileList.appendChild(categoryDiv);
             });
-        })
-        .catch(error => {
-            console.error('Error loading files:', error);
-            fileList.innerHTML = '<div class="file-item" style="text-align: center;">Error loading files</div>';
-        });
+
+        } catch (error) {
+            console.error('Error parsing JSON or processing files:', error);
+            fileList.innerHTML = '<div class="file-item" style="text-align: center; color: red;">Error loading files. Invalid response format.</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching files:', error);
+        fileList.innerHTML = '<div class="file-item" style="text-align: center; color: red;">Error loading files. Please try again later.</div>';
+    }
 }
 
 function groupFilesByDate(files) {
@@ -311,4 +327,3 @@ function downloadFile(fileId) {
 }
 
 window.onload = loadFiles;
-

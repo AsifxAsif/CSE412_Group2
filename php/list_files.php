@@ -2,6 +2,8 @@
 session_start();
 require 'db.php';
 
+header('Content-Type: application/json');  // Ensure the content type is JSON
+
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(["error" => "Unauthorized"]);
@@ -15,10 +17,14 @@ try {
     $stmt->execute([$user_id]);
     $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    header('Content-Type: application/json');
-    echo json_encode($files);
+    // If no files are found, return an empty array
+    echo json_encode($files ? $files : []);
 } catch (PDOException $e) {
-    http_response_code(500);
+    // Log the error to the server log for debugging
+    error_log("Database error: " . $e->getMessage());
+
+    // Respond with a JSON error message
+    http_response_code(500); // Internal Server Error
     echo json_encode(["error" => "Database error: " . $e->getMessage()]);
 }
 ?>

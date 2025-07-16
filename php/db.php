@@ -4,6 +4,8 @@ $db = 'group2';
 $user = 'root';
 $pass = '';
 
+header('Content-Type: application/json');  // Ensure content type is JSON
+
 try {
     // Create a PDO instance
     $conn = new PDO("mysql:host=$host;charset=utf8", $user, $pass);
@@ -16,9 +18,9 @@ try {
     // If the database doesn't exist, create it
     if ($stmt->rowCount() == 0) {
         $conn->exec("CREATE DATABASE $db");
-        echo "Database created successfully.<br>";
-    } else {
-        echo "Database already exists.<br>";
+
+        // Return success as JSON
+        echo json_encode(["message" => "Database created successfully."]);
     }
 
     // Select the database to work with
@@ -49,9 +51,12 @@ try {
     ";
     $conn->exec($createFilesTable);
 
-    echo "Tables created (or already exist) successfully.<br>";
-
 } catch(PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    // Log the error for debugging
+    error_log("Database connection failed: " . $e->getMessage());
+
+    // Return error as JSON
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Connection failed: " . $e->getMessage()]);
 }
 ?>
