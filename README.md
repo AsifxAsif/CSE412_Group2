@@ -52,12 +52,16 @@ CSE412_group2/
 │   └── dashboard.js        # File upload modal, list, search
 └── php/
     ├── db.php              # DB connection (MySQL)
-    ├── register.php        # User registration logic
-    ├── login.php           # User login logic (with localStorage redirect)
-    ├── logout.php          # Logout logic
-    ├── upload.php          # File upload and sorting logic
+    ├── delete_file.php     # Logic for deleting a file
+    ├── download_file.php   # Logic for downloading a file
+    ├── get_files.php       # Logic for fetching file details
     ├── list_files.php      # Fetch and list uploaded files per user
-    └── login_error.php     # Returns session error via JSON
+    ├── login.php           # User login logic (with localStorage redirect)
+    ├── login_error.php     # Returns session error via JSON
+    ├── logout.php          # Logout logic
+    ├── register.php        # User registration logic
+    ├── rename_file.php     # Logic for renaming a file
+    └── upload.php          # File upload and sorting logic
 ```
 
 ---
