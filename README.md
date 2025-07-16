@@ -70,7 +70,7 @@ CSE412_group2/
 
 1. **Install XAMPP** and run Apache & MySQL.  
 2. **Place the project** folder in `htdocs` directory (e.g., `C:\xampp\htdocs\CSE412_group2`).  
-3. **Start MySQL** and just go to `http://localhost/CSE412_group2/index.html`. The code auto generated the database named `group2`:
+3. **Start MySQL** and just go to `http://localhost/CSE412_group2/`. The code auto generated the database named `group2`:
 
 ```sql
 CREATE TABLE users (
