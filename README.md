@@ -17,15 +17,17 @@ A fully responsive file storage and management system built for the CSE412 cours
 ---
 
 ## 🔧 Features
-
 - ✅ **User Registration and Login with validation**  
 - ✅ **File upload via modal** (supports `.txt`, `.jpg`, `.png`, `.jpeg`, `.gif`, `.mp3`, `.mp4`, `.pdf`, etc.)
 - ✅ **Prevent uploading duplicate files**  
 - ✅ **Automatic file categorization** by type into subdirectories (`uploads/txt/`, `uploads/img/`, `uploads/audio/`, etc.)  
 - ✅ **Scroll through the list of uploaded files**  
 - ✅ **Responsive and modern dashboard design**  
-- ✅ **Live search functionality** to filter files by name
-- ✅ **Modal Reset**: The file input gets reset when the modal is opened again after file rejection or modal closure.
+- ✅ **Live search functionality** to filter files by name  
+- ✅ **File View Modal** for images, videos, PDFs, text, audio, etc.  
+- ✅ **Rename files with modal confirmation**  
+- ✅ **Delete files with confirmation modal and success message**  
+- ✅ **Download files via button**  
 
 ---
 
