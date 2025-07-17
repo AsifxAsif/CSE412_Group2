@@ -150,15 +150,27 @@ async function loadFiles() {
 
 function groupFilesByDate(files) {
     const groupedFiles = {};
+
+    // Group by formatted date
     files.forEach(file => {
         const fileDate = new Date(file.upload_date);
         const formattedDate = `${fileDate.toLocaleString('default', { month: 'long' })} ${fileDate.getDate()}, ${fileDate.getFullYear()}`;
+
         if (!groupedFiles[formattedDate]) {
             groupedFiles[formattedDate] = [];
         }
         groupedFiles[formattedDate].push(file);
     });
-    return groupedFiles;
+
+    // Sort grouped keys by actual date descending
+    const sortedGrouped = {};
+    Object.keys(groupedFiles)
+        .sort((a, b) => new Date(b) - new Date(a))  // Descending order
+        .forEach(date => {
+            sortedGrouped[date] = groupedFiles[date];
+        });
+
+    return sortedGrouped;
 }
 
 search.addEventListener('input', () => {
@@ -307,20 +319,68 @@ function openRenameModal() {
     renameModal.classList.add('active');
 }
 
+let fileIdToDelete = null;
+
 function deleteFile(fileId) {
-    if (confirm('Are you sure you want to delete this file?')) {
-        fetch(`php/delete_file.php?id=${fileId}`, { method: 'DELETE' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('File deleted successfully');
-                    loadFiles();
-                } else {
-                    alert('Error deleting the file');
-                }
-            });
-    }
+    fileIdToDelete = fileId;
+    document.getElementById('deleteMessage').textContent = '';
+
+    // Fetch file info to get the filename
+    fetch(`php/get_files.php?id=${fileId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const filename = data.filename;
+                const fileText = document.getElementById('deleteFileNameText');
+                fileText.innerHTML = `Are you sure you want to delete <strong>"${filename}"</strong>?`;
+                openDeleteModal();
+            } else {
+                console.error('Failed to fetch filename for deletion');
+                document.getElementById('deleteFileNameText').textContent = 'File not found.';
+                openDeleteModal();
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching file for delete:', err);
+            document.getElementById('deleteFileNameText').textContent = 'Unable to load file info.';
+            openDeleteModal();
+        });
 }
+
+function openDeleteModal() {
+    document.getElementById('deleteModal').classList.add('active');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+    fileIdToDelete = null;
+    document.getElementById('deleteMessage').textContent = '';
+}
+
+document.getElementById('confirmDelete').addEventListener('click', () => {
+    if (!fileIdToDelete) return;
+
+    fetch(`php/delete_file.php?id=${fileIdToDelete}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            const messageBox = document.getElementById('deleteMessage');
+            if (data.success) {
+                messageBox.textContent = 'File deleted successfully';
+                messageBox.style.color = 'limegreen';
+                loadFiles();
+                setTimeout(closeDeleteModal, 1500); // Auto-close after success
+            } else {
+                messageBox.textContent = 'Error deleting the file';
+                messageBox.style.color = 'red';
+            }
+        })
+        .catch(err => {
+            const messageBox = document.getElementById('deleteMessage');
+            console.error('Error deleting file:', err);
+            messageBox.textContent = 'An error occurred while deleting the file.';
+            messageBox.style.color = 'red';
+        });
+});
 
 function downloadFile(fileId) {
     window.location.href = `php/download_file.php?id=${fileId}`;
