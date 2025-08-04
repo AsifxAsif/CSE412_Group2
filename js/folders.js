@@ -6,21 +6,13 @@ const allowedExtensions = {
     'audio': ['mp3', 'wav', 'ogg', 'flac', 'aac'],
     'code': ['c', 'cpp', 'py', 'java', 'php', 'js', 'html', 'css', 'json', 'xml', 'sql'],
     'documents': ['doc', 'docx', 'txt', 'pdf', 'md', 'log', 'rtf', 'odt'],
-<<<<<<< HEAD
     'archive': ['zip', 'rar', '7z', 'tar', 'gz'],
-=======
-    'archive': ['zip', 'rar', '7z', 'tar', 'gz'], // Added a new archive category
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
     'other': []
 };
 
 let currentTargetCategory = '';
 let currentSubfolder = '';
 
-<<<<<<< HEAD
-=======
-// Function to determine the image thumbnail for main categories
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
 function getFolderThumbnail(categoryName) {
     const lowerCategory = categoryName.toLowerCase();
     switch (lowerCategory) {
@@ -38,16 +30,11 @@ function getFolderThumbnail(categoryName) {
             return 'resource/code.jpg';
         case 'documents':
             return 'resource/document.jpg';
-<<<<<<< HEAD
         case 'archive':
-=======
-        case 'archive': // Added thumbnail for archive
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             return 'resource/archive.jpg';
         case 'other':
             return 'resource/other.jpg';
         default:
-<<<<<<< HEAD
             return 'resource/default-folder.jpg';
     }
 }
@@ -55,16 +42,6 @@ function getFolderThumbnail(categoryName) {
 function getFolderIconHtml(folderName) {
     const lowerCaseFolderName = folderName.toLowerCase();
     let iconClass = 'fas fa-file';
-=======
-            return 'resource/default-folder.jpg'; // Fallback
-    }
-}
-
-// Function to determine the Font Awesome icon for subfolders (extensions)
-function getFolderIconHtml(folderName) {
-    const lowerCaseFolderName = folderName.toLowerCase();
-    let iconClass = 'fas fa-file'; // Default icon for a generic file/unknown extension
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
 
     switch (lowerCaseFolderName) {
         case 'jpg':
@@ -133,11 +110,7 @@ function getFolderIconHtml(folderName) {
             iconClass = 'fas fa-file-archive';
             break;
         default:
-<<<<<<< HEAD
             iconClass = 'fas fa-folder-open'; 
-=======
-            iconClass = 'fas fa-folder-open'; // Generic icon for unknown extensions/subfolders
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
     }
     return `<i class="${iconClass}"></i>`;
 }
@@ -171,7 +144,6 @@ $(document).ready(function () {
         .catch(error => console.error('Error loading navbar:', error));
 
     const urlParams = new URLSearchParams(window.location.search);
-<<<<<<< HEAD
     const categoryParam = urlParams.get('category'); 
 
     const pageTitleElement = $('#pageTitle'); 
@@ -197,60 +169,19 @@ $(document).ready(function () {
             isSubfolderView = true;
         } else {
             url = './php/list_main_categories.php'; 
-=======
-    const categoryParam = urlParams.get('category'); // This is the main category if present (e.g., 'image')
-
-    // --- Dynamic Title and Heading Update ---
-    const pageTitleElement = $('#pageTitle'); // Get the h1 element
-    const htmlTitleElement = $('title'); // Get the <title> element
-
-    let displayTitle = 'My Folders 📂'; // Default for the very top level of folders.html
-
-    if (categoryParam) {
-        // If a category is present (e.g., 'image'), update title to "Image Folders"
-        displayTitle = `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)} Folders 📁`;
-    }
-
-    // Update the main heading
-    pageTitleElement.text(displayTitle);
-    // Update the HTML document title
-    htmlTitleElement.text(displayTitle.replace(' 📁', '')); // Remove emoji for HTML title if desired
-
-    // Function to load and display folders/subfolders
-    // Function to load and display folders/subfolders
-    function loadFolders(parentCategory = null) {
-        let url = '';
-        let data = {};
-        let isSubfolderView = false; // Flag to indicate if we are showing subfolders
-
-        if (parentCategory) {
-            url = './php/list_folders.php'; // This script should return subfolders (extensions) for a given category
-            data = { category: parentCategory };
-            isSubfolderView = true;
-        } else {
-            url = './php/list_main_categories.php'; // This script should return top-level categories (e.g., 'image', 'excel')
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
         }
 
         $.ajax({
             url: url,
             method: 'GET',
             data: data,
-<<<<<<< HEAD
             dataType: 'json', 
-=======
-            dataType: 'json', // Expect JSON response
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             success: function (folderData) {
                 if (!Array.isArray(folderData) || folderData.length === 0) {
                     $('#noFoldersMessage').removeClass('hidden');
                     return;
                 }
 
-<<<<<<< HEAD
-=======
-                // Hide the "No folders found" message if folders exist
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 $('#noFoldersMessage').addClass('hidden');
                 $('#folderGrid').removeClass('flex items-center justify-center min-h-[400px] w-full');
                 $('#folderGrid').empty();
@@ -263,17 +194,9 @@ $(document).ready(function () {
                     let openLink = '';
 
                     if (isSubfolderView) {
-<<<<<<< HEAD
                         thumbnailContent = `<div class="icon-placeholder">${getFolderIconHtml(folderName)}</div>`;
                         openLink = `files.html?category=${parentCategory}&subfolder=${lowerCaseFolderName}`;
                     } else {
-=======
-                        // For subfolders, use icons
-                        thumbnailContent = `<div class="icon-placeholder">${getFolderIconHtml(folderName)}</div>`; // Removed the extra <i> tag
-                        openLink = `files.html?category=${parentCategory}&subfolder=${lowerCaseFolderName}`;
-                    } else {
-                        // For main categories, use images
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                         thumbnailContent = `<img src="${getFolderThumbnail(folderName)}" alt="${folderName} Folder Thumbnail" class="w-full h-full object-cover rounded-2xl">`;
                         openLink = `folders.html?category=${lowerCaseFolderName}`;
                     }
@@ -315,10 +238,6 @@ $(document).ready(function () {
         });
     }
 
-<<<<<<< HEAD
-=======
-    // Call loadFolders based on URL parameter
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
     if (categoryParam) {
         loadFolders(categoryParam);
     } else {
@@ -381,11 +300,7 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
-<<<<<<< HEAD
             success: function (result) {
-=======
-            success: function (result) { // Changed 'response' to 'result' and removed JSON.parse
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 let displayMessage = '';
 
                 if (Array.isArray(result)) {
@@ -397,11 +312,6 @@ $(document).ready(function () {
                         }
                     });
                 } else {
-<<<<<<< HEAD
-=======
-                    // This block handles cases where the PHP might return a single object, e.g., for
-                    // "No file(s) uploaded or invalid request."
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                     displayMessage = `<p><strong class="text-red-600">Error</strong>: ${result.message || 'An unexpected error occurred.'}</p>`;
                 }
 

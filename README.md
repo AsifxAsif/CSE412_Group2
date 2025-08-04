@@ -44,26 +44,52 @@ A fully responsive file storage and management system built for the CSE412 cours
 
 ```
 CSE412_group2/
-├── index.html              # Login/Register landing page
-├── dashboard.html          # User dashboard for file management
 ├── css/
-│   ├── index.css           # Styling for login/register page
-│   └── dashboard.css       # Styling for dashboard
+│   ├── 404.css             # Styling for the 404 page
+│   ├── dashboard.css       # Styling for the main user dashboard
+│   ├── files.css           # Styling for the dedicated files page
+│   ├── folders.css         # Styling for the dedicated folders page
+│   └── index.css           # Styling for the login/register page
 ├── js/
-│   ├── index.js            # Login/register behavior (form toggle, alerts)
-│   └── dashboard.js        # File upload modal, list, search
-└── php/
-    ├── db.php              # DB connection (MySQL)
-    ├── delete_file.php     # Logic for deleting a file
-    ├── download_file.php   # Logic for downloading a file
-    ├── get_files.php       # Logic for fetching file details
-    ├── list_files.php      # Fetch and list uploaded files per user
-    ├── login.php           # User login logic (with localStorage redirect)
-    ├── login_error.php     # Returns session error via JSON
-    ├── logout.php          # Logout logic
-    ├── register.php        # User registration logic
-    ├── rename_file.php     # Logic for renaming a file
-    └── upload.php          # File upload and sorting logic
+│   ├── dashboard.js        # Logic for file upload, listing, search on the dashboard
+│   ├── files.js            # Logic for the files.html page
+│   ├── folders.js          # Logic for the folders.html page
+│   └── index.js            # Login/register form toggle and validation
+├── php/
+│   ├── db.php              # Database connection configuration
+│   ├── delete_file.php     # Logic for deleting a file
+│   ├── download_file.php   # Logic for downloading a file
+│   ├── folder-functions.php  # Functions for creating and managing folders
+│   ├── get_files.php       # Logic for fetching file details
+│   ├── list_files.php      # Fetches and lists all files for a user
+│   ├── list_folders.php    # Fetches and lists folders for a user
+│   ├── list_main_categories.php # Lists main file categories
+│   ├── login_error.php     # Returns session error via JSON
+│   ├── login.php           # User login logic
+│   ├── logout.php          # User logout logic
+│   ├── register.php        # User registration logic
+│   ├── rename_file.php     # Logic for renaming a file
+│   ├── subfolder-functions.php # Functions for managing files within subfolders
+│   └── upload.php          # File upload and categorization logic
+├── resource/               # Directory for all image assets, icons, etc.
+│   ├── audio.jpg           # Thumbnail for audio files
+│   ├── cloud-up.png        # Cloud upload icon
+│   ├── code.jpg            # Thumbnail for code files
+│   ├── default.jpg         # Generic thumbnail
+│   ├── document.jpg        # Thumbnail for text documents
+│   ├── DropNova.png        # Project logo
+│   ├── excel.jpg           # Thumbnail for spreadsheets
+│   ├── favicon.ico         # Website favicon
+│   ├── image.jpg           # Thumbnail for image files
+│   ├── other.jpg           # Thumbnail for uncategorized files
+│   ├── ppt.jpg             # Thumbnail for presentations
+│   └── video.jpg           # Thumbnail for video files
+├── 404.html                # Custom error page
+├── dashboard.html          # Main user dashboard
+├── files.html              # Page to list and manage all files
+├── folders.html            # Page to list and manage folders
+├── index.html              # Login/Register landing page
+├── navbar.html             # Reusable navigation bar component
 ```
 
 ---

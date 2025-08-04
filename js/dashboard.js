@@ -358,16 +358,9 @@ document.getElementById('confirmDelete').addEventListener('click', () => {
                 messageBox.style.color = 'limegreen';
                 loadFiles();
             } else {
-<<<<<<< HEAD
                 messageBox.textContent = data.message || 'Error deleting the file';
                 messageBox.style.color = 'red';
             }
-=======
-                messageBox.textContent = data.message || 'Error deleting the file'; // Show error message
-                messageBox.style.color = 'red';
-            }
-            // Close the modal after a short delay, regardless of success or failure
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             setTimeout(() => {
                 closeDeleteModal();
             }, 500);
@@ -386,15 +379,9 @@ document.getElementById('confirmDelete').addEventListener('click', () => {
 
 function closeDeleteModal() {
     const modal = document.getElementById('deleteModal');
-<<<<<<< HEAD
     modal.classList.remove('active');
     fileIdToDelete = null;
     document.getElementById('deleteMessage').textContent = '';
-=======
-    modal.classList.remove('active');  // Ensure to remove the active class to close modal
-    fileIdToDelete = null;
-    document.getElementById('deleteMessage').textContent = ''; // Clear the message
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
 }
 
 function downloadFile(fileId) {
@@ -406,20 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(data => {
             document.getElementById('navbarContainer').innerHTML = data;
-<<<<<<< HEAD
             const uploadIcon = document.querySelector('.custom-file-upload .icon img');
-=======
-            // Reapply image visibility or styles if necessary
-            const uploadIcon = document.querySelector('.custum-file-upload .icon img');
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             if (uploadIcon) {
                 uploadIcon.style.display = 'block';
                 uploadIcon.style.opacity = '1';
             }
-<<<<<<< HEAD
-=======
-            // Any additional setup for the navbar or modal
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             if (window.FontAwesome && FontAwesome.dom && FontAwesome.dom.i2svg) {
                 FontAwesome.dom.i2svg();
             }

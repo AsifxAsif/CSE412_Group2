@@ -6,23 +6,11 @@ const allowedExtensions = {
             'audio': ['mp3', 'wav', 'ogg'],
             'code': ['c', 'cpp', 'py', 'java', 'php', 'js', 'html', 'css'],
             'documents': ['doc', 'docx', 'txt', 'pdf', 'md', 'log'],
-<<<<<<< HEAD
         };
 
         const allKnownExtensions = Object.values(allowedExtensions).flat();
         let fileIdToDelete = null;
 
-=======
-            // 'other': [] // No need for 'other' here; it's determined by exclusion
-        };
-
-        // Create a flattened list of all known extensions for easy lookup
-        const allKnownExtensions = Object.values(allowedExtensions).flat();
-
-        let fileIdToDelete = null;
-
-        // Function to get file icon based on extension
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
         function getFileIcon(extension) {
             const ext = extension.toLowerCase();
             switch (ext) {
@@ -75,35 +63,19 @@ const allowedExtensions = {
             }
         }
 
-<<<<<<< HEAD
-=======
-        // Function to get thumbnail image based on file extension (if applicable)
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
         function getFileThumbnail(extension, filePath) {
             const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
             const correctedFilePath = filePath.startsWith('uploads/') ? filePath : `uploads/${filePath}`;
 
-<<<<<<< HEAD
-=======
-            // Check if the file is an image before attempting to show a thumbnail
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             if (imageExtensions.includes(extension.toLowerCase())) {
                 return `<img src="${correctedFilePath}" alt="Thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/160x90/E0E0E0/333333?text=No+Preview';">`;
             }
 
-<<<<<<< HEAD
-=======
-            // If the file is not an image, show the correct file icon
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             return `<div class="icon-placeholder"><i class="${getFileIcon(extension)}"></i></div>`;
         }
 
 
         $(document).ready(function () {
-<<<<<<< HEAD
-=======
-            // Load navbar
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             fetch('./navbar.html')
                 .then(response => response.text())
                 .then(data => {
@@ -114,7 +86,6 @@ const allowedExtensions = {
 
             const urlParams = new URLSearchParams(window.location.search);
             const category = urlParams.get('category');
-<<<<<<< HEAD
             const subfolder = urlParams.get('subfolder'); 
 
             let pageTitle = '';
@@ -133,63 +104,22 @@ const allowedExtensions = {
                     pageTitle = `${category.charAt(0).toUpperCase() + category.slice(1)} Files`;
                 }
             } else {
-=======
-            const subfolder = urlParams.get('subfolder'); // Get subfolder parameter
-
-            let pageTitle = '';
-            let loadFilesCategory = null; // Variable to pass to loadFiles for PHP filtering
-            let loadFilesSubfolder = null; // Variable to pass to loadFiles for PHP filtering
-            let groupDates = true; // Default to grouping by date if no category/subfolder
-
-            if (category) {
-                // If a category is present
-                loadFilesCategory = category;
-                groupDates = false; // Don't group by date if a specific category is chosen
-
-                if (subfolder) {
-                    // If both category AND subfolder are present
-                    pageTitle = `${subfolder.charAt(0).toUpperCase() + subfolder.slice(1)} Files`;
-                    loadFilesSubfolder = subfolder; // Pass subfolder for PHP filtering
-                } else {
-                    // Only category, no subfolder
-                    pageTitle = `${category.charAt(0).toUpperCase() + category.slice(1)} Files`;
-                }
-            } else {
-                // No category or subfolder specified, show all files and group by date
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 pageTitle = 'All Uploaded Files';
             }
 
             $('#folderTitle').text(pageTitle);
             loadFiles(loadFilesCategory, loadFilesSubfolder, groupDates);
 
-<<<<<<< HEAD
-=======
-
-            // Search functionality
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
             $('#searchFiles').on('keyup', function () {
                 const searchTerm = $(this).val().toLowerCase();
                 let anyFileFound = false;
 
-<<<<<<< HEAD
                 $('.date-group-heading').hide();
 
-=======
-                // Find all date group headings and hide them initially
-                $('.date-group-heading').hide();
-
-                // Iterate through all file cards
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 $('.file-card').each(function () {
                     const fileName = $(this).data('file-name');
                     if (fileName && fileName.includes(searchTerm)) {
                         $(this).show();
-<<<<<<< HEAD
-=======
-                        // If a file is found, show its corresponding date heading
-                        // Only show heading if date grouping is active
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                         if (groupDates) {
                             $(this).prevAll('.date-group-heading').first().show();
                         }
@@ -199,18 +129,9 @@ const allowedExtensions = {
                     }
                 });
 
-<<<<<<< HEAD
                 if (!anyFileFound && $('#fileGrid').children(':visible').length === 0) {
                     $('#fileGrid').html('<p class="text-center text-white text-3xl font-bold p-4">No files match your search.</p>');
                 } else if (anyFileFound && $('#fileGrid').find('p.text-center').length > 0) {
-=======
-                // If no files are found at all, show a message
-                if (!anyFileFound && $('#fileGrid').children(':visible').length === 0) {
-                    $('#fileGrid').html('<p class="text-center text-white text-3xl font-bold p-4">No files match your search.</p>');
-                } else if (anyFileFound && $('#fileGrid').find('p.text-center').length > 0) {
-                    // If files are found after a previous "no files" message, re-load to rebuild the grid
-                    // Re-load with original category and subfolder parameters
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                     loadFiles(loadFilesCategory, loadFilesSubfolder, groupDates);
                 }
             });
@@ -220,15 +141,8 @@ const allowedExtensions = {
             });
         });
 
-<<<<<<< HEAD
         async function loadFiles(category = null, subfolder = null, groupDates = false) {
             try {
-=======
-        // Modified loadFiles to accept subfolder and a groupDates flag
-        async function loadFiles(category = null, subfolder = null, groupDates = false) {
-            try {
-                // Construct URL for list_files.php based on parameters
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 let fetchUrl = './php/list_files.php';
                 const queryParams = [];
 
@@ -255,41 +169,22 @@ const allowedExtensions = {
 
                 let filesToDisplay = allFiles;
 
-<<<<<<< HEAD
-=======
-                // Always sort files by upload_date in descending order (newest first)
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 filesToDisplay.sort((a, b) => {
                     const dateA = new Date(a.upload_date);
                     const dateB = new Date(b.upload_date);
                     return dateB - dateA;
                 });
 
-<<<<<<< HEAD
                 $('#fileGrid').empty();
                 $('#fileGrid').removeClass('flex items-center justify-center min-h-[300px] w-full');
 
                 $('#noFilesMessage').addClass('hidden');
 
                 if (filesToDisplay.length === 0) {
-=======
-                $('#fileGrid').empty(); // Clear existing content
-                $('#fileGrid').removeClass('flex items-center justify-center min-h-[300px] w-full'); // Remove message styling
-
-                // Hide the "No files found" message if there are files
-                $('#noFilesMessage').addClass('hidden');
-
-                if (filesToDisplay.length === 0) {
-                    // Show the "No files found" message if no files are found
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                     $('#noFilesMessage').removeClass('hidden');
                     return;
                 }
 
-<<<<<<< HEAD
-=======
-                // Proceed with rendering files if they exist
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                 if (groupDates) {
                     const filesGroupedByDate = filesToDisplay.reduce((groups, file) => {
                         const uploadDate = file.upload_date ? new Date(file.upload_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Date';
@@ -384,10 +279,6 @@ const allowedExtensions = {
             }
         }
 
-<<<<<<< HEAD
-=======
-        // --- Delete Modal Functions ---
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
         function openDeleteModal() {
             $('#deleteModal').addClass('active');
             $('#deleteMessage').text('');
@@ -402,7 +293,6 @@ const allowedExtensions = {
             $('#deleteMessage').text('');
         }
 
-<<<<<<< HEAD
         function deleteFile(fileId) {
             fileIdToDelete = fileId;
 
@@ -410,17 +300,6 @@ const allowedExtensions = {
             deleteButton.prop('disabled', false); 
             deleteButton.css('background-color', ''); 
             deleteButton.css('cursor', ''); 
-=======
-        // Function to open the delete modal and re-enable the delete button
-        function deleteFile(fileId) {
-            fileIdToDelete = fileId;
-
-            // Re-enable the delete button in case it was disabled previously
-            const deleteButton = $('#confirmDelete');
-            deleteButton.prop('disabled', false); // Re-enable button
-            deleteButton.css('background-color', ''); // Reset background color
-            deleteButton.css('cursor', ''); // Reset cursor
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
 
             $.ajax({
                 url: `./php/get_files.php?id=${fileId}`,
@@ -441,10 +320,6 @@ const allowedExtensions = {
             });
         }
 
-<<<<<<< HEAD
-=======
-        // Modified performDeleteFile to disable the button after a successful deletion
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
         async function performDeleteFile() {
             if (!fileIdToDelete) {
                 console.error('No file ID to delete.');
@@ -471,38 +346,21 @@ const allowedExtensions = {
                 }
 
                 const messageBox = $('#deleteMessage');
-<<<<<<< HEAD
                 const deleteButton = $('#confirmDelete'); 
 
                 if (result.status === 'success') {
                     deleteButton.prop('disabled', true); 
                     deleteButton.css('background-color', '#ccc'); 
                     deleteButton.css('cursor', 'not-allowed'); 
-=======
-                const deleteButton = $('#confirmDelete'); // Get the delete button
-
-                if (result.status === 'success') {
-                    // Disable the delete button after successful deletion
-                    deleteButton.prop('disabled', true); // Disable button
-                    deleteButton.css('background-color', '#ccc'); // Optional: change button color to indicate it's disabled
-                    deleteButton.css('cursor', 'not-allowed'); // Change cursor to 'not-allowed'
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
 
                     messageBox.text('File deleted successfully.');
                     messageBox.css('color', 'limegreen');
 
                     const urlParams = new URLSearchParams(window.location.search);
                     const category = urlParams.get('category');
-<<<<<<< HEAD
                     const subfolder = urlParams.get('subfolder'); 
                     const currentGroupDates = !category; 
                     loadFiles(category, subfolder, currentGroupDates); 
-=======
-                    const subfolder = urlParams.get('subfolder'); // Get subfolder again
-                    // Reload files with current category and subfolder, maintaining grouping logic
-                    const currentGroupDates = !category; // True if category is null/undefined
-                    loadFiles(category, subfolder, currentGroupDates); // Pass subfolder to loadFiles
->>>>>>> 54e9809507ddbc7546fc4905a9be9e57cda9a135
                     setTimeout(closeDeleteModal, 1000);
                 } else {
                     messageBox.text(`Error deleting the file: ${result.message || 'Unknown error occurred.'}`);
