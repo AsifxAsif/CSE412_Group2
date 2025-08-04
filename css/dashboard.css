@@ -6,25 +6,38 @@ body {
     height: 100vh;
     color: #fff;
     align-items: center;
+    background: #81d4fa;
     justify-content: center;
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+}
+
+#bgBubble {
+    left: 12.5%;
+}
+
+#bubble1 {
+    transform: translateY(0%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#bubble1>span {
+    opacity: 0.7;
 }
 
 /* Dashboard Wrapper */
 .dashboard-wrapper {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
     width: 100%;
-    height: 100%; /* Ensure full height for centering */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Main Content Styling */
 .dashboard-container {
-    padding: 30px;
     width: 100%;
-    max-width: 800px; /* Set a maximum width */
+    padding: 30px;
+    max-width: 800px;
     border-radius: 20px;
     align-items: center;
     background: #7494ec;
@@ -34,14 +47,17 @@ body {
 
 /* Dashboard Header */
 .dashboard-header {
+    gap: 0px;
+    display: flex;
     text-align: center;
     margin-bottom: 20px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.dashboard-header h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
+.dashboard-header img {
+    width: 150px;
 }
 
 /* Dashboard Actions */
@@ -121,10 +137,18 @@ body {
     border-bottom: 1px solid #dddddd;
 }
 
+.file-item span {
+    flex-grow: 1;
+    white-space: normal;
+    word-break: break-all;
+}
+
 /* File Actions */
 .file-actions {
     gap: 10px;
     display: flex;
+    flex-shrink: 0;
+    margin-left: 10px;
 }
 
 .file-actions button {
@@ -133,28 +157,28 @@ body {
     cursor: pointer;
     padding: 5px 5px;
     border-radius: 6px;
-    transition: all 0.3s ease;
     border: 1px solid #bbb;
+    transition: all 0.3s ease;
 }
 
 .file-actions .view-btn:hover {
-    background-color: #4CAF50;
     color: white;
+    background-color: #4CAF50;
 }
 
 .file-actions .rename-btn:hover {
-    background-color: #FFA500;
     color: white;
+    background-color: #FFA500;
 }
 
 .file-actions .delete-btn:hover {
-    background-color: #F44336;
     color: white;
+    background-color: #F44336;
 }
 
 .file-actions .download-btn:hover {
-    background-color: #2196F3;
     color: white;
+    background-color: #2196F3;
 }
 
 /* Logout Button */
@@ -187,8 +211,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 999;
     display: none;
+    z-index: 99999;
     position: fixed;
     align-items: center;
     justify-content: center;
@@ -203,6 +227,7 @@ body {
 /* Modal Content */
 .modal-content {
     width: 90%;
+    z-index: 9999;
     display: flex;
     color: #333;
     max-width: 400px;
@@ -221,9 +246,9 @@ body {
 .close-modal {
     top: 10px;
     right: 10px;
-    z-index: 10;
     padding: 6px;
     color: #555;
+    z-index: 10000;
     line-height: 1;
     font-size: 26px;
     cursor: pointer;
@@ -236,7 +261,7 @@ body {
 }
 
 /* Custom File Upload Styling */
-.custum-file-upload {
+.custom-file-upload {
     gap: 20px;
     width: 300px;
     height: 200px;
@@ -253,29 +278,29 @@ body {
     box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
-.custum-file-upload .icon {
+.custom-file-upload .icon {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.custum-file-upload .icon svg {
-    height: 80px;
-    fill: rgba(75, 85, 99, 1);
+.custom-file-upload .icon i {
+    color: #555;
+    font-size: 100px;
 }
 
-.custum-file-upload .text {
+.custom-file-upload .text {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.custum-file-upload .text span {
+.custom-file-upload .text span {
     font-weight: 400;
     color: rgba(75, 85, 99, 1);
 }
 
-.custum-file-upload input {
+.custom-file-upload input {
     display: none;
 }
 
@@ -346,7 +371,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 999;
+    z-index: 9999;
     display: none;
     position: fixed;
     align-items: center;
@@ -377,6 +402,37 @@ body {
     font-size: 36px;
     cursor: pointer;
     position: absolute;
+}
+
+.deleteButtons {
+    gap: 50px;
+    display: flex;
+}
+
+#confirmDelete {
+    background-color: #F44336;
+}
+
+#cancelDelete {
+    background-color: #4CAF50;
+}
+
+#confirmDelete:hover {
+    background-color: #d32f2f;
+}
+
+#cancelDelete:hover {
+    background-color: #3f8841;
+}
+
+/* New CSS to fix filename wrapping in the delete modal */
+#deleteFileNameText {
+    word-break: break-all;
+    white-space: normal;
+}
+
+#deleteFileNameText strong {
+    word-break: break-all;
 }
 
 /* Scrollbar styling */

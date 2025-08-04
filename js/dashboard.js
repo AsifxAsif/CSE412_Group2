@@ -89,16 +89,14 @@ async function uploadFile() {
     closeModal();
 }
 
-// Load the files from the server
 async function loadFiles() {
     try {
         const res = await fetch('php/list_files.php');
-        const data = await res.text();  // Get response as text first
-        console.log('Raw response: ', data); // Log the raw response to see what it is
+        const data = await res.text();
 
         try {
-            const files = JSON.parse(data); // Try parsing it as JSON
-            fileList.innerHTML = ''; // Clear current list
+            const files = JSON.parse(data);
+            fileList.innerHTML = '';
 
             if (!files || files.length === 0) {
                 const emptyMsg = document.createElement('div');
@@ -110,13 +108,12 @@ async function loadFiles() {
                 return;
             }
 
-            // Group the files by date
             const groupedFiles = groupFilesByDate(files);
 
             Object.keys(groupedFiles).forEach(category => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'file-category';
-                categoryDiv.innerHTML = `<h3>${category}</h3>`; // Display the formatted date as category
+                categoryDiv.innerHTML = `<h3>${category}</h3>`;
 
                 groupedFiles[category].forEach(file => {
                     const item = document.createElement('div');
@@ -151,7 +148,6 @@ async function loadFiles() {
 function groupFilesByDate(files) {
     const groupedFiles = {};
 
-    // Group by formatted date
     files.forEach(file => {
         const fileDate = new Date(file.upload_date);
         const formattedDate = `${fileDate.toLocaleString('default', { month: 'long' })} ${fileDate.getDate()}, ${fileDate.getFullYear()}`;
@@ -162,10 +158,9 @@ function groupFilesByDate(files) {
         groupedFiles[formattedDate].push(file);
     });
 
-    // Sort grouped keys by actual date descending
     const sortedGrouped = {};
     Object.keys(groupedFiles)
-        .sort((a, b) => new Date(b) - new Date(a))  // Descending order
+        .sort((a, b) => new Date(b) - new Date(a))
         .forEach(date => {
             sortedGrouped[date] = groupedFiles[date];
         });
@@ -220,9 +215,9 @@ function viewFile(fileId) {
                     content = `<img src="${data.filepath}" alt="File Image" style="max-width: 100%; max-height: 500px;">`;
                 } else if (['mp4', 'avi', 'mov'].includes(fileExtension)) {
                     content = `<video id="viewFileVideo" controls style="max-width: 100%; max-height: 500px;">
-                                  <source src="${data.filepath}" type="video/${fileExtension}">
-                                  Your browser does not support the video tag.
-                               </video>`;
+                                       <source src="${data.filepath}" type="video/${fileExtension}">
+                                       Your browser does not support the video tag.
+                                      </video>`;
                 } else if (['pdf'].includes(fileExtension)) {
                     content = `<iframe src="${data.filepath}" width="100%" height="500px"></iframe>`;
                 } else if (['pptx', 'xlsx'].includes(fileExtension)) {
@@ -241,9 +236,9 @@ function viewFile(fileId) {
                         });
                 } else if (['mp3', 'wav', 'ogg'].includes(fileExtension)) {
                     content = `<audio controls style="max-width: 100%; max-height: 500px;">
-                                  <source src="${data.filepath}" type="audio/${fileExtension}">
-                                  Your browser does not support the audio tag.
-                               </audio>`;
+                                       <source src="${data.filepath}" type="audio/${fileExtension}">
+                                       Your browser does not support the audio tag.
+                                      </audio>`;
                 } else {
                     content = `<p>Unable to preview this file type.</p>`;
                 }
@@ -325,14 +320,13 @@ function deleteFile(fileId) {
     fileIdToDelete = fileId;
     document.getElementById('deleteMessage').textContent = '';
 
-    // Fetch file info to get the filename
     fetch(`php/get_files.php?id=${fileId}`)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 const filename = data.filename;
                 const fileText = document.getElementById('deleteFileNameText');
-                fileText.innerHTML = `Are you sure you want to delete <strong>"${filename}"</strong>?`;
+                fileText.innerHTML = `Are you sure you want to delete <br><strong>"${filename}"</strong>?`;
                 openDeleteModal();
             } else {
                 console.error('Failed to fetch filename for deletion');
@@ -351,12 +345,6 @@ function openDeleteModal() {
     document.getElementById('deleteModal').classList.add('active');
 }
 
-function closeDeleteModal() {
-    document.getElementById('deleteModal').classList.remove('active');
-    fileIdToDelete = null;
-    document.getElementById('deleteMessage').textContent = '';
-}
-
 document.getElementById('confirmDelete').addEventListener('click', () => {
     if (!fileIdToDelete) return;
 
@@ -364,26 +352,56 @@ document.getElementById('confirmDelete').addEventListener('click', () => {
         .then(response => response.json())
         .then(data => {
             const messageBox = document.getElementById('deleteMessage');
+
             if (data.success) {
                 messageBox.textContent = 'File deleted successfully';
                 messageBox.style.color = 'limegreen';
                 loadFiles();
-                setTimeout(closeDeleteModal, 1500); // Auto-close after success
             } else {
-                messageBox.textContent = 'Error deleting the file';
+                messageBox.textContent = data.message || 'Error deleting the file';
                 messageBox.style.color = 'red';
             }
+            setTimeout(() => {
+                closeDeleteModal();
+            }, 500);
+            loadFiles();
         })
         .catch(err => {
             const messageBox = document.getElementById('deleteMessage');
             console.error('Error deleting file:', err);
             messageBox.textContent = 'An error occurred while deleting the file.';
             messageBox.style.color = 'red';
+            setTimeout(() => {
+                closeDeleteModal();
+            }, 500);
         });
 });
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.remove('active');
+    fileIdToDelete = null;
+    document.getElementById('deleteMessage').textContent = '';
+}
 
 function downloadFile(fileId) {
     window.location.href = `php/download_file.php?id=${fileId}`;
 }
 
-window.onload = loadFiles;
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('./navbar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbarContainer').innerHTML = data;
+            const uploadIcon = document.querySelector('.custom-file-upload .icon img');
+            if (uploadIcon) {
+                uploadIcon.style.display = 'block';
+                uploadIcon.style.opacity = '1';
+            }
+            if (window.FontAwesome && FontAwesome.dom && FontAwesome.dom.i2svg) {
+                FontAwesome.dom.i2svg();
+            }
+        })
+        .catch(error => console.error('Error loading navbar:', error));
+    loadFiles();
+});

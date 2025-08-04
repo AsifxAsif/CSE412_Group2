@@ -1,0 +1,237 @@
+.glass {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+body {
+    overflow-y: auto;
+    min-height: 100vh;
+    background: #81d4fa;
+    font-family: 'Inter', sans-serif;
+}
+
+#bgBubble {
+    left: 62.5%;
+}
+
+#bubble3 {
+    transform: translateY(0%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#bubble3>span {
+    opacity: 0.7;
+}
+
+.file-card {
+    overflow: hidden;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.file-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.file-thumbnail {
+    overflow: hidden;
+    position: relative;
+    padding-top: 56.25%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.file-thumbnail img,
+.file-thumbnail .icon-placeholder {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    color: #ccc;
+    font-size: 3rem;
+    object-fit: cover;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.file-thumbnail .icon-placeholder i {
+    font-size: 3rem;
+    color: #60a5fa;
+}
+
+.file-details {
+    padding: 1rem;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #425cb4;
+}
+
+::-webkit-scrollbar-track {
+    background: #81d4fa;
+}
+
+.modal {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    overflow: auto;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    border-radius: 15px;
+    background-color: #fefefe;
+    animation: fadeIn 0.3s ease-out;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-modal {
+    top: 10px;
+    right: 15px;
+    color: #aaa;
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: bold;
+    position: absolute;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    color: #555;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.deleteButtons {
+    gap: 15px;
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.upload-ok-button {
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.upload-ok-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+#cancelDelete {
+    background-color: #2196F3;
+}
+
+#cancelDelete:hover {
+    background-color: #0b7dda;
+}
+
+#confirmDelete {
+    background-color: #f44336;
+}
+
+#confirmDelete:hover {
+    background-color: #da190b;
+}
+
+#deleteFileNameText {
+    font-size: 1rem;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+#deleteMessage {
+    padding: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .modal-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+    }
+
+    .upload-ok-button {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .deleteButtons {
+        gap: 10px;
+        flex-direction: column;
+    }
+}
