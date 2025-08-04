@@ -19,7 +19,7 @@ if ($file) {
     $allowedExtensions = [
         'image' => ['jpg', 'jpeg', 'png', 'gif', 'ico'],
         'video' => ['mp4', 'avi', 'mov', 'mkv'],
-        'excel' => ['xls', 'xlsx', 'csv'],
+        'excel' => ['xls', 'xlsx', 'xlsm', 'csv'],
         'ppt' => ['ppt', 'pptx'],
         'audio' => ['mp3', 'wav', 'ogg'],
         'code' => ['c', 'cpp', 'py', 'java', 'php', 'js', 'html', 'css'],

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Folders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        body {
+            background: #81d4fa;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .folder-card {
+            transition: all 0.4s ease;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
+        }
+
+        .folder-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.25);
+        }
+
+        /* Base styles for folder-thumbnail */
+        .folder-thumbnail {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff;
+        }
+
+        .folder-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .folder-thumbnail .fa-solid,
+        .folder-thumbnail .fa-regular {
+            font-size: 16rem;
+            color: #3498db;
+        }
+
+        .icon-placeholder i {
+            font-size: 3rem;
+            color: #60a5fa;
+        }
+
+        .folder-details {
+            position: relative;
+            z-index: 2;
+        }
+
+        #bgBubble {
+            left: 37.5%;
+        }
+
+        #bubble2 {
+            transform: translateY(0%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        #bubble2>span {
+            opacity: 0.7;
+        }
+
+        .shine-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            transform: rotate(30deg);
+            animation: shine 6s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: rotate(30deg) translateX(-100%);
+            }
+
+            20% {
+                transform: rotate(30deg) translateX(100%);
+            }
+
+            100% {
+                transform: rotate(30deg) translateX(100%);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #425cb4;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #81d4fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-800">
+
+    <div id="navbarContainer"></div>
+    <div class="max-w-screen-xl mx-auto px-4 py-8 pb-24">
+        <div class="text-center mb-10">
+            <h1 id="pageTitle" class="text-5xl font-bold mb-3 text-white font-serif">My Folders 📂</h1>
+        </div>
+
+        <div class="mb-8 max-w-md mx-auto">
+            <div class="glass rounded-full px-5 py-3 flex items-center shadow-lg">
+                <i class="fas fa-search text-blue-600 mr-3"></i>
+                <input type="text" id="search" placeholder="Find folder..."
+                    class="bg-transparent w-full focus:outline-none placeholder-blue-500 text-blue-500">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-20" id="folderGrid"></div>
+
+        <div id="noFoldersMessage"
+            class="flex items-center justify-center min-h-[300px] w-full text-center text-white text-3xl font-bold hidden">
+            No folders found. Upload some files!
+        </div>
+
+        <div class="flex justify-center mb-16">
+            <button id="addNewFolderButton"
+                class="bg-blue-500 hover:bg-white-600 text-white font-serif rounded-full px-6 py-3 flex items-center justify-center shadow-lg transition-all hover:transform hover:scale-105">
+                <i class="fas fa-plus mr-2"></i> Add New Folder
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="hiddenFileUploadInput" style="display: none;" multiple>
+
+    <div id="uploadStatusModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="text-2xl font-bold mb-4" id="modalTitle">Upload Status</h2>
+            <div class="loading-spinner" id="uploadSpinner"></div>
+            <p id="uploadMessage" class="text-gray-700"></p>
+            <button id="modalOkButton" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                style="display: none;">OK</button>
+        </div>
+    </div>
+
+
+    <script>
+        const allowedExtensions = {
+            'image': ['jpg', 'jpeg', 'png', 'gif', 'ico', 'webp', 'bmp', 'tiff'],
+            'video': ['mp4', 'avi', 'mov', 'mkv', 'webm', 'flv'],
+            'excel': ['xls', 'xlsx', 'xlsm', 'csv'],
+            'ppt': ['ppt', 'pptx'],
+            'audio': ['mp3', 'wav', 'ogg', 'flac', 'aac'],
+            'code': ['c', 'cpp', 'py', 'java', 'php', 'js', 'html', 'css', 'json', 'xml', 'sql'],
+            'documents': ['doc', 'docx', 'txt', 'pdf', 'md', 'log', 'rtf', 'odt'],
+            'archive': ['zip', 'rar', '7z', 'tar', 'gz'], // Added a new archive category
+            'other': []
+        };
+
+        let currentTargetCategory = '';
+        let currentSubfolder = '';
+
+        // Function to determine the image thumbnail for main categories
+        function getFolderThumbnail(categoryName) {
+            const lowerCategory = categoryName.toLowerCase();
+            switch (lowerCategory) {
+                case 'image':
+                    return 'resource/image.jpg';
+                case 'video':
+                    return 'resource/video.jpg';
+                case 'excel':
+                    return 'resource/excel.jpg';
+                case 'ppt':
+                    return 'resource/ppt.jpg';
+                case 'audio':
+                    return 'resource/audio.jpg';
+                case 'code':
+                    return 'resource/code.jpg';
+                case 'documents':
+                    return 'resource/document.jpg';
+                case 'archive': // Added thumbnail for archive
+                    return 'resource/archive.jpg';
+                case 'other':
+                    return 'resource/other.jpg';
+                default:
+                    return 'resource/default-folder.jpg'; // Fallback
+            }
+        }
+
+        // Function to determine the Font Awesome icon for subfolders (extensions)
+        function getFolderIconHtml(folderName) {
+            const lowerCaseFolderName = folderName.toLowerCase();
+            let iconClass = 'fas fa-file'; // Default icon for a generic file/unknown extension
+
+            switch (lowerCaseFolderName) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                case 'ico':
+                case 'webp':
+                case 'bmp':
+                case 'tiff':
+                    iconClass = 'fas fa-image';
+                    break;
+                case 'mp4':
+                case 'avi':
+                case 'mov':
+                case 'mkv':
+                case 'webm':
+                case 'flv':
+                    iconClass = 'fas fa-video';
+                    break;
+                case 'xls':
+                case 'xlsx':
+                case 'xlsm':
+                case 'csv':
+                    iconClass = 'fas fa-file-excel';
+                    break;
+                case 'ppt':
+                case 'pptx':
+                    iconClass = 'fas fa-file-powerpoint';
+                    break;
+                case 'mp3':
+                case 'wav':
+                case 'ogg':
+                case 'flac':
+                case 'aac':
+                    iconClass = 'fas fa-file-audio';
+                    break;
+                case 'c':
+                case 'cpp':
+                case 'py':
+                case 'java':
+                case 'php':
+                case 'js':
+                case 'html':
+                case 'css':
+                case 'json':
+                case 'xml':
+                case 'sql':
+                    iconClass = 'fas fa-file-code';
+                    break;
+                case 'doc':
+                case 'docx':
+                case 'txt':
+                case 'pdf':
+                case 'md':
+                case 'log':
+                case 'rtf':
+                case 'odt':
+                    iconClass = 'fas fa-file-alt';
+                    break;
+                case 'zip':
+                case 'rar':
+                case '7z':
+                case 'tar':
+                case 'gz':
+                    iconClass = 'fas fa-file-archive';
+                    break;
+                default:
+                    iconClass = 'fas fa-folder-open'; // Generic icon for unknown extensions/subfolders
+            }
+            return `<i class="${iconClass}"></i>`;
+        }
+
+        function showModal(title, message, showSpinner = false, showOkButton = false) {
+            $('#modalTitle').text(title);
+            $('#uploadMessage').html(message);
+            if (showSpinner) {
+                $('#uploadSpinner').show();
+            } else {
+                $('#uploadSpinner').hide();
+            }
+            if (showOkButton) {
+                $('#modalOkButton').show();
+            } else {
+                $('#modalOkButton').hide();
+            }
+            $('#uploadStatusModal').css('display', 'flex');
+        }
+
+        function hideModal() {
+            $('#uploadStatusModal').hide();
+        }
+
+        $(document).ready(function () {
+            fetch('./navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbarContainer').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading navbar:', error));
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category'); // This is the main category if present (e.g., 'image')
+
+            // --- Dynamic Title and Heading Update ---
+            const pageTitleElement = $('#pageTitle'); // Get the h1 element
+            const htmlTitleElement = $('title'); // Get the <title> element
+
+            let displayTitle = 'My Folders 📂'; // Default for the very top level of folders.html
+
+            if (categoryParam) {
+                // If a category is present (e.g., 'image'), update title to "Image Folders"
+                displayTitle = `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)} Folders 📁`;
+            }
+
+            // Update the main heading
+            pageTitleElement.text(displayTitle);
+            // Update the HTML document title
+            htmlTitleElement.text(displayTitle.replace(' 📁', '')); // Remove emoji for HTML title if desired
+
+            // Function to load and display folders/subfolders
+            // Function to load and display folders/subfolders
+            function loadFolders(parentCategory = null) {
+                let url = '';
+                let data = {};
+                let isSubfolderView = false; // Flag to indicate if we are showing subfolders
+
+                if (parentCategory) {
+                    url = './php/list_folders.php'; // This script should return subfolders (extensions) for a given category
+                    data = { category: parentCategory };
+                    isSubfolderView = true;
+                } else {
+                    url = './php/list_main_categories.php'; // This script should return top-level categories (e.g., 'image', 'excel')
+                }
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: data,
+                    dataType: 'json', // Expect JSON response
+                    success: function (folderData) {
+                        if (!Array.isArray(folderData) || folderData.length === 0) {
+                            $('#noFoldersMessage').removeClass('hidden');
+                            return;
+                        }
+
+                        // Hide the "No folders found" message if folders exist
+                        $('#noFoldersMessage').addClass('hidden');
+                        $('#folderGrid').removeClass('flex items-center justify-center min-h-[400px] w-full');
+                        $('#folderGrid').empty();
+
+                        folderData.forEach(function (folder) {
+                            const folderName = folder.name;
+                            const lowerCaseFolderName = folderName.toLowerCase();
+
+                            let thumbnailContent = '';
+                            let openLink = '';
+
+                            if (isSubfolderView) {
+                                // For subfolders, use icons
+                                thumbnailContent = `<div class="icon-placeholder">${getFolderIconHtml(folderName)}</div>`; // Removed the extra <i> tag
+                                openLink = `files.html?category=${parentCategory}&subfolder=${lowerCaseFolderName}`;
+                            } else {
+                                // For main categories, use images
+                                thumbnailContent = `<img src="${getFolderThumbnail(folderName)}" alt="${folderName} Folder Thumbnail" class="w-full h-full object-cover rounded-2xl">`;
+                                openLink = `folders.html?category=${lowerCaseFolderName}`;
+                            }
+
+                            var folderCard = `
+                <div class="folder-card glass p-5 relative overflow-hidden" data-folder-name="${lowerCaseFolderName}">
+                    <div class="shine-effect"></div>
+                    <div class="folder-thumbnail mb-4 relative">
+                        ${thumbnailContent} </div>
+                    <div class="folder-details">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-bold text-blue-600">${folderName}</h3>
+                        </div>
+                        <div class="flex items-center text-xs text-blue-400 mb-3">
+                            <span class="mr-3"><i class="fas fa-calendar-alt mr-1"></i> Last Updated on ${new Date().toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-blue-100 flex justify-between items-center">
+                        <a href="${openLink}" class="text-blue-500 hover:text-blue-700">
+                            <i class="fas fa-folder-open mr-1"></i> Open Folder
+                        </a>
+                        <button type="button" class="text-blue-500 hover:text-blue-700 js-upload-button"
+                                data-main-category="${parentCategory || lowerCaseFolderName}"
+                                data-subfolder-name="${isSubfolderView ? lowerCaseFolderName : ''}">
+                            <i class="fas fa-upload mr-1"></i> Upload
+                        </button>
+                    </div>
+                </div>
+                `;
+                            $('#folderGrid').append(folderCard);
+                            AOS.refresh();
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading folders: " + error);
+                        $('#folderGrid').addClass('flex items-center justify-center min-h-[400px] w-full');
+                        $('#folderGrid').html('<p class="text-center text-white text-xl p-4">Failed to load folders. Please try again later.</p>');
+                    }
+                });
+            }
+
+            // Call loadFolders based on URL parameter
+            if (categoryParam) {
+                loadFolders(categoryParam);
+            } else {
+                loadFolders();
+            }
+
+            $('#search').on('keyup', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('.folder-card').each(function () {
+                    const folderName = $(this).data('folder-name');
+                    if (folderName.includes(searchTerm)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            $(document).on('click', '.js-upload-button', function () {
+                const mainCategory = $(this).data('main-category');
+                const subfolderName = $(this).data('subfolder-name');
+
+                currentTargetCategory = mainCategory;
+                currentSubfolder = subfolderName;
+
+                let targetExtensions = [];
+                if (currentSubfolder) {
+                    targetExtensions = [currentSubfolder];
+                } else if (currentTargetCategory && allowedExtensions[currentTargetCategory]) {
+                    targetExtensions = allowedExtensions[currentTargetCategory];
+                }
+
+                const acceptString = targetExtensions.map(ext => `.${ext}`).join(',');
+                $('#hiddenFileUploadInput').attr('accept', acceptString || '*/*');
+
+                $('#hiddenFileUploadInput').click();
+            });
+
+
+            $('#hiddenFileUploadInput').on('change', function () {
+                const files = this.files;
+                if (files.length === 0) {
+                    return;
+                }
+
+                const formData = new FormData();
+                Array.from(files).forEach(file => formData.append('file[]', file));
+
+                formData.append('category', currentTargetCategory);
+                if (currentSubfolder) {
+                    formData.append('subfolder', currentSubfolder);
+                }
+
+                let modalTitle = `Uploading files to ${currentSubfolder || currentTargetCategory} folder...`;
+                showModal('Uploading...', modalTitle, true);
+
+                $.ajax({
+                    url: './php/upload.php',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) { // Changed 'response' to 'result' and removed JSON.parse
+                        let displayMessage = '';
+
+                        if (Array.isArray(result)) {
+                            result.forEach(fileResult => {
+                                if (fileResult.status === 'success') {
+                                    displayMessage += `<p><strong class="text-green-600">Success</strong>: ${fileResult.filename} → ${fileResult.folder}</p>`;
+                                } else {
+                                    displayMessage += `<p><strong class="text-red-600">Error</strong>: ${fileResult.filename} → ${fileResult.message || 'Failed'}</p>`;
+                                }
+                            });
+                        } else {
+                            // This block handles cases where the PHP might return a single object, e.g., for
+                            // "No file(s) uploaded or invalid request."
+                            displayMessage = `<p><strong class="text-red-600">Error</strong>: ${result.message || 'An unexpected error occurred.'}</p>`;
+                        }
+
+                        showModal('Upload Status', displayMessage, false, true);
+
+                        if (categoryParam) {
+                            loadFolders(categoryParam);
+                        } else {
+                            loadFolders();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Upload AJAX error:", status, error, xhr.responseText);
+                        let errorMessage = `An error occurred: ${error}`;
+                        try {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            if (errorResponse.message) {
+                                errorMessage = errorResponse.message;
+                            }
+                        } catch (e) {
+                            errorMessage = xhr.responseText || errorMessage;
+                        }
+                        showModal('Upload Error', errorMessage, false, true);
+                    },
+                    complete: function () {
+                        $('#hiddenFileUploadInput').val('');
+                    }
+                });
+            });
+
+            $('.close-button, #modalOkButton').on('click', function () {
+                hideModal();
+            });
+
+            $(window).on('click', function (event) {
+                if ($(event.target).is('#uploadStatusModal')) {
+                    hideModal();
+                }
+            });
+
+            $('#addNewFolderButton').on('click', function () {
+                alert('Add New Folder functionality will go here!');
+            });
+
+            AOS.init({
+                duration: 800,
+                once: true,
+            });
+        });
+    </script>
+</body>
+
+</html>
