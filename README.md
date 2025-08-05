@@ -89,7 +89,7 @@ CSE412_group2/
 ├── files.html              # Page to list and manage all files
 ├── folders.html            # Page to list and manage folders
 ├── index.html              # Login/Register landing page
-├── navbar.html             # Reusable navigation bar component
+└── navbar.html             # Reusable navigation bar component
 ```
 
 ---
