@@ -277,7 +277,7 @@ body {
     border: 2px dashed #000;
     background-position: top;
     background-repeat: no-repeat;
-    background-image: url('../resource/cloud-up.png');
+    background-image: url('../resource/upload.png');
     box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
@@ -311,6 +311,10 @@ body {
     font-weight: bold;
     max-height: 100px;
     border-radius: 8px;
+    line-break: strict;
+    white-space: normal;
+    word-wrap: break-word; 
+    word-break: break-word; 
 }
 
 /* Rename Modal */

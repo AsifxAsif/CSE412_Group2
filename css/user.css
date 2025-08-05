@@ -18,7 +18,7 @@ body {
     max-width: 1000px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    gap: 30px;
 }
 
 #bgBubble {
@@ -39,6 +39,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    border-right: 2px solid black;
+    padding-right: 30px;
 }
 
 h1 {
@@ -59,23 +61,35 @@ h2 {
     margin: 20px 0;
 }
 
+.input-box {
+    position: relative;
+}
+
 .input-box input {
-    width: 100%;
+    width: calc(100% - 30px);
     padding: 14px;
     border-radius: 8px;
     border: 1px solid #ddd;
     font-size: 16px;
     color: #333;
-    margin-bottom: 10px;
     background-color: #f9f9f9;
 }
+
+.input-box i {
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    cursor: pointer;
+    color: #333;
+}
+
 
 .input-box input:disabled {
     background-color: #e0e0e0;
 }
 
 .btn {
-    width: 106%;
+    width: 100%;
     padding: 14px;
     border: none;
     background-color: #4c6ef5;
@@ -93,7 +107,6 @@ h2 {
 
 /* Project Tree Section */
 .relative.group {
-    margin-top: 40px;
     position: relative;
     display: inline-block;
 }
@@ -129,10 +142,13 @@ h2 {
     padding: 10px;
     display: none;
     width: 350px;
-    max-height: 300px; /* Limit the height */
-    overflow-y: auto;  /* Enable vertical scrolling */
+    max-height: 300px;
+    /* Limit the height */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
     scrollbar-width: thin;
-    scrollbar-color: #4c6ef5 #f1f1f1; /* Custom scrollbar color */
+    scrollbar-color: #4c6ef5 #f1f1f1;
+    /* Custom scrollbar color */
 }
 
 /* Custom Scrollbar Styles */
@@ -141,11 +157,13 @@ h2 {
 }
 
 .absolute::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* Light background for the track */
+    background-color: #f1f1f1;
+    /* Light background for the track */
 }
 
 .absolute::-webkit-scrollbar-thumb {
-    background-color: #4c6ef5; /* Blue color for the scrollbar thumb */
+    background-color: #4c6ef5;
+    /* Blue color for the scrollbar thumb */
     border-radius: 4px;
 }
 
@@ -173,7 +191,8 @@ ul li:hover {
 /* Responsiveness */
 @media screen and (max-width: 768px) {
     .container {
-        grid-template-columns: 1fr; /* Stack on smaller screens */
+        grid-template-columns: 1fr;
+        /* Stack on smaller screens */
         padding: 20px;
     }
 

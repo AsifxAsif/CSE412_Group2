@@ -70,6 +70,23 @@ function fetchUserData() {
     });
 }
 
+// Toggle password visibility function
+function togglePassword(passwordId, iconId) {
+    const passwordField = document.getElementById(passwordId);
+    const icon = document.getElementById(iconId);
+
+    // Toggle the type between 'password' and 'text'
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordField.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+
 // Load the project tree based on uploaded files and folders
 function loadProjectTree() {
     $.get('php/get_project_tree.php', function (data) {
