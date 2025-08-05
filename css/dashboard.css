@@ -271,33 +271,28 @@ body {
     margin: 10px auto;
     border-radius: 10px;
     align-items: center;
+    background-size: cover;
     flex-direction: column;
     justify-content: center;
-    background-color: #fff;
     border: 2px dashed #000;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-image: url('../resource/cloud-up.png');
     box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.1);
-}
-
-.custom-file-upload .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.custom-file-upload .icon i {
-    color: #555;
-    font-size: 100px;
 }
 
 .custom-file-upload .text {
     display: flex;
+    margin-top: 150px;
+    font-size: x-large;
     align-items: center;
     justify-content: center;
 }
 
 .custom-file-upload .text span {
-    font-weight: 400;
+    font-weight: 900;
     color: rgba(75, 85, 99, 1);
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .custom-file-upload input {
