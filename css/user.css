@@ -1,0 +1,195 @@
+/* User Page Styling */
+body {
+    background: #81d4fa;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 90%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+#bgBubble {
+    left: 87.5%;
+}
+
+#bubble4 {
+    transform: translateY(0%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#bubble4>span {
+    opacity: 0.7;
+}
+
+/* Form Section Styling */
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-box {
+    margin: 20px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.input-box input:disabled {
+    background-color: #e0e0e0;
+}
+
+.btn {
+    width: 106%;
+    padding: 14px;
+    border: none;
+    background-color: #4c6ef5;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #3653a3;
+}
+
+/* Project Tree Section */
+.relative.group {
+    margin-top: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+.bg-white {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.bg-white svg {
+    fill: #ffa000;
+}
+
+.bg-white p {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.absolute {
+    left: 0;
+    top: 60px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    display: none;
+    width: 350px;
+    max-height: 300px; /* Limit the height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    scrollbar-width: thin;
+    scrollbar-color: #4c6ef5 #f1f1f1; /* Custom scrollbar color */
+}
+
+/* Custom Scrollbar Styles */
+.absolute::-webkit-scrollbar {
+    width: 8px;
+}
+
+.absolute::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Light background for the track */
+}
+
+.absolute::-webkit-scrollbar-thumb {
+    background-color: #4c6ef5; /* Blue color for the scrollbar thumb */
+    border-radius: 4px;
+}
+
+/* Show the scroll bar when hovering over the group */
+.relative.group:hover .absolute {
+    display: block;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+    font-size: 1rem;
+    color: #444;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+ul li:hover {
+    background-color: #f4f4f4;
+    cursor: pointer;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Stack on smaller screens */
+        padding: 20px;
+    }
+
+    .form-box {
+        margin-bottom: 15px;
+    }
+
+    .input-box input {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+    .bg-white p {
+        font-size: 1rem;
+    }
+}
